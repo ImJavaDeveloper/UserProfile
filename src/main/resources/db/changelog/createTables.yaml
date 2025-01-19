@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: RahatAli
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: uid
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: firstName
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lastName
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: userCred
+            columns:
+              - column:
+                  name: username
+                  type: VARCHAR(30)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: password
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
