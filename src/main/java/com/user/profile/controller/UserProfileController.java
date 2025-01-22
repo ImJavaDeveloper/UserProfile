@@ -1,6 +1,7 @@
 package com.user.profile.controller;
 
 import com.user.profile.model.PasswordUpdateRequest;
+import com.user.profile.model.UserDetails;
 import com.user.profile.model.UserRegistrationRequest;
 import com.user.profile.model.UserUpdateRequest;
 import com.user.profile.service.UserProfileService;
@@ -20,23 +21,27 @@ public class UserProfileController {
     UserProfileService userProfileService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest)
-    {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
         userProfileService.registerUser(userRegistrationRequest);
-        return new ResponseEntity<>(userRegistrationRequest,HttpStatus.CREATED);
+        return new ResponseEntity<>(userRegistrationRequest, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest)
-    {
-       UserUpdateRequest userUpdated= userProfileService.updateUser(userUpdateRequest);
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        UserUpdateRequest userUpdated = userProfileService.updateUser(userUpdateRequest);
         return ResponseEntity.of(Optional.of(userUpdated));
     }
 
     @PutMapping("/reset/password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest)
-    {
-        PasswordUpdateRequest passUpdated=userProfileService.updatePassword(passwordUpdateRequest);
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        PasswordUpdateRequest passUpdated = userProfileService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.of(Optional.of(passUpdated));
     }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserDetails> getUserDetail(@PathVariable String username) {
+        UserDetails userDetails = userProfileService.getUserDetail(username);
+        return ResponseEntity.of(Optional.of(userDetails));
+    }
+
 }

@@ -9,6 +9,7 @@ import com.user.profile.kafka.event.UserPasswordChangeEvent;
 import com.user.profile.kafka.service.KafkaMessageProducer;
 import com.user.profile.kafka.event.UserRegistrationEvent;
 import com.user.profile.model.PasswordUpdateRequest;
+import com.user.profile.model.UserDetails;
 import com.user.profile.model.UserRegistrationRequest;
 import com.user.profile.model.UserUpdateRequest;
 import com.user.profile.repository.UserCredentialRepository;
@@ -72,6 +73,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         {
             userProfileToBeUpdated=mapper.map(userUpdateRequest,UserProfile.class);
             userProfileToBeUpdated.setUid(userProfile.getUid());
+            userProfileToBeUpdated.setUsername(userProfile.getUsername());
             log.info("userProfileToBeUpdated:{}",userProfileToBeUpdated);
             userProfileRepository.save(userProfileToBeUpdated);
         }
@@ -93,8 +95,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
         if(passwordEncoder.matches(passwordUpdateRequest.getOldPassword(),userCredential.getPassword()))
         {
-            log.info(userCredential.toString());
-            log.info(passwordEncoder.encode(passwordUpdateRequest.getOldPassword()));
             UserCredential userCredWithNewPass=mapper.map(passwordUpdateRequest,UserCredential.class);
             String encodePassword=passwordEncoder.encode(passwordUpdateRequest.getPassword());
             userCredWithNewPass.setPassword(encodePassword);
@@ -107,5 +107,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
 
          return passwordUpdateRequest;
+    }
+
+    @Override
+    public UserDetails getUserDetail(String username) {
+        UserProfile userProfile= userProfileRepository.findByUsername(username);
+        return  new UserDetails(userProfile.getFirstName(),userProfile.getLastName(),userProfile.getEmail());
     }
 }
